@@ -1,105 +1,169 @@
-# # # # # from utils.pdf_reader import extract_text_from_pdf
+# # # # # # from utils.pdf_reader import extract_text_from_pdf
 
+# # # # # # pdf_text = extract_text_from_pdf("data/sample.pdf")
+
+# # # # # # print(pdf_text[:1000])
+# # # # # from utils.pdf_reader import extract_text_from_pdf
+# # # # # from utils.text_splitter import split_text_into_chunks
+
+# # # # # # Read the PDF
 # # # # # pdf_text = extract_text_from_pdf("data/sample.pdf")
 
-# # # # # print(pdf_text[:1000])
+# # # # # # Split into chunks
+# # # # # chunks = split_text_into_chunks(pdf_text)
+
+# # # # # # Print information
+# # # # # print(f"Total Chunks: {len(chunks)}")
+
+# # # # # print("\nFirst Chunk:\n")
+# # # # # print(chunks[0])
+
+# # # # # print("\nSecond Chunk:\n")
+# # # # # print(chunks[1])
 # # # # from utils.pdf_reader import extract_text_from_pdf
 # # # # from utils.text_splitter import split_text_into_chunks
+# # # # from utils.embeddings import create_embeddings
 
-# # # # # Read the PDF
+# # # # # Read PDF
 # # # # pdf_text = extract_text_from_pdf("data/sample.pdf")
 
 # # # # # Split into chunks
 # # # # chunks = split_text_into_chunks(pdf_text)
 
-# # # # # Print information
 # # # # print(f"Total Chunks: {len(chunks)}")
 
-# # # # print("\nFirst Chunk:\n")
-# # # # print(chunks[0])
+# # # # # Create embeddings
+# # # # embeddings = create_embeddings(chunks)
 
-# # # # print("\nSecond Chunk:\n")
-# # # # print(chunks[1])
+# # # # print(f"\nTotal Embeddings: {len(embeddings)}")
+
+# # # # print("\nDimension of one embedding:")
+# # # # print(len(embeddings[0]))
+
+# # # # print("\nFirst 10 values of the first embedding:")
+# # # # print(embeddings[0][:10])
+
+
 # # # from utils.pdf_reader import extract_text_from_pdf
 # # # from utils.text_splitter import split_text_into_chunks
-# # # from utils.embeddings import create_embeddings
+# # # from utils.vector_store import (
+# # #     create_vector_store,
+# # #     search_vector_store,
+# # # )
 
-# # # # Read PDF
+# # # # -------------------------------
+# # # # Step 1: Read PDF
+# # # # -------------------------------
+
 # # # pdf_text = extract_text_from_pdf("data/sample.pdf")
 
-# # # # Split into chunks
+# # # # -------------------------------
+# # # # Step 2: Split Text
+# # # # -------------------------------
+
 # # # chunks = split_text_into_chunks(pdf_text)
 
-# # # print(f"Total Chunks: {len(chunks)}")
+# # # print(f"\nTotal Chunks : {len(chunks)}")
 
-# # # # Create embeddings
-# # # embeddings = create_embeddings(chunks)
+# # # # -------------------------------
+# # # # Step 3: Create Vector Store
+# # # # -------------------------------
 
-# # # print(f"\nTotal Embeddings: {len(embeddings)}")
+# # # vector_store = create_vector_store(chunks)
 
-# # # print("\nDimension of one embedding:")
-# # # print(len(embeddings[0]))
+# # # if vector_store is None:
+# # #     print("\nFailed to create FAISS Vector Store.")
+# # #     exit()
 
-# # # print("\nFirst 10 values of the first embedding:")
-# # # print(embeddings[0][:10])
+# # # print("\n✅ FAISS Vector Store Created Successfully!")
 
+# # # # -------------------------------
+# # # # Step 4: Test Similarity Search
+# # # # -------------------------------
 
-# # from utils.pdf_reader import extract_text_from_pdf
-# # from utils.text_splitter import split_text_into_chunks
-# # from utils.vector_store import (
-# #     create_vector_store,
-# #     search_vector_store,
-# # )
+# # # query = input("\nEnter your question: ")
 
-# # # -------------------------------
-# # # Step 1: Read PDF
-# # # -------------------------------
+# # # results = search_vector_store(vector_store, query)
 
-# # pdf_text = extract_text_from_pdf("data/sample.pdf")
+# # # print("\nTop Matching Chunks\n")
 
-# # # -------------------------------
-# # # Step 2: Split Text
-# # # -------------------------------
+# # # for i, doc in enumerate(results, start=1):
+# # #     print(f"Result {i}")
+# # #     print("-" * 60)
+# # #     print(doc.page_content)
+# # #     print()
 
-# # chunks = split_text_into_chunks(pdf_text)
+# # from utils.llm import get_llm
 
-# # print(f"\nTotal Chunks : {len(chunks)}")
+# # llm = get_llm()
 
-# # # -------------------------------
-# # # Step 3: Create Vector Store
-# # # -------------------------------
+# # response = llm.invoke("Say hello in one sentence.")
 
-# # vector_store = create_vector_store(chunks)
+# # print(response.content)
 
-# # if vector_store is None:
-# #     print("\nFailed to create FAISS Vector Store.")
-# #     exit()
+# from utils.pdf_reader import extract_text_from_pdf
+# from utils.text_splitter import split_text_into_chunks
+# from utils.vector_store import (
+#     create_vector_store,
+#     search_vector_store,
+# )
+# from utils.llm import generate_answer
 
-# # print("\n✅ FAISS Vector Store Created Successfully!")
+# # ----------------------------------
+# # Step 1: Read PDF
+# # ----------------------------------
 
-# # # -------------------------------
-# # # Step 4: Test Similarity Search
-# # # -------------------------------
+# pdf_text = extract_text_from_pdf("data/sample.pdf")
 
-# # query = input("\nEnter your question: ")
+# # ----------------------------------
+# # Step 2: Split Text
+# # ----------------------------------
 
-# # results = search_vector_store(vector_store, query)
+# chunks = split_text_into_chunks(pdf_text)
 
-# # print("\nTop Matching Chunks\n")
+# print(f"\nTotal Chunks: {len(chunks)}")
 
-# # for i, doc in enumerate(results, start=1):
-# #     print(f"Result {i}")
-# #     print("-" * 60)
-# #     print(doc.page_content)
-# #     print()
+# # ----------------------------------
+# # Step 3: Create Vector Store
+# # ----------------------------------
 
-# from utils.llm import get_llm
+# vector_store = create_vector_store(chunks)
 
-# llm = get_llm()
+# if vector_store is None:
+#     print("Failed to create vector store.")
+#     exit()
 
-# response = llm.invoke("Say hello in one sentence.")
+# print("✅ Vector Store Created Successfully!")
 
-# print(response.content)
+# # ----------------------------------
+# # Step 4: Ask User Question
+# # ----------------------------------
+
+# question = input("\nAsk your question: ")
+
+# # ----------------------------------
+# # Step 5: Retrieve Relevant Chunks
+# # ----------------------------------
+
+# documents = search_vector_store(
+#     vector_store,
+#     question
+# )
+
+# # ----------------------------------
+# # Step 6: Generate Final Answer
+# # ----------------------------------
+
+# answer = generate_answer(
+#     question,
+#     documents
+# )
+
+# print("\n" + "=" * 60)
+# print("ANSWER")
+# print("=" * 60)
+
+# print(answer)
 
 from utils.pdf_reader import extract_text_from_pdf
 from utils.text_splitter import split_text_into_chunks
@@ -110,22 +174,24 @@ from utils.vector_store import (
 from utils.llm import generate_answer
 
 # ----------------------------------
-# Step 1: Read PDF
+# Load PDF
 # ----------------------------------
+
+print("Loading PDF...")
 
 pdf_text = extract_text_from_pdf("data/sample.pdf")
 
 # ----------------------------------
-# Step 2: Split Text
+# Split Text
 # ----------------------------------
 
 chunks = split_text_into_chunks(pdf_text)
 
-print(f"\nTotal Chunks: {len(chunks)}")
+# ----------------------------------
+# Create Vector Store
+# ----------------------------------
 
-# ----------------------------------
-# Step 3: Create Vector Store
-# ----------------------------------
+print("Creating Vector Store...")
 
 vector_store = create_vector_store(chunks)
 
@@ -133,34 +199,31 @@ if vector_store is None:
     print("Failed to create vector store.")
     exit()
 
-print("✅ Vector Store Created Successfully!")
+print("\n✅ AI PDF Chatbot is Ready!")
+print("Type 'exit' anytime to quit.\n")
 
 # ----------------------------------
-# Step 4: Ask User Question
+# Chat Loop
 # ----------------------------------
 
-question = input("\nAsk your question: ")
+while True:
 
-# ----------------------------------
-# Step 5: Retrieve Relevant Chunks
-# ----------------------------------
+    question = input("You: ")
 
-documents = search_vector_store(
-    vector_store,
-    question
-)
+    if question.lower() == "exit":
+        print("\nGoodbye!")
+        break
 
-# ----------------------------------
-# Step 6: Generate Final Answer
-# ----------------------------------
+    documents = search_vector_store(
+        vector_store,
+        question
+    )
 
-answer = generate_answer(
-    question,
-    documents
-)
+    answer = generate_answer(
+        question,
+        documents
+    )
 
-print("\n" + "=" * 60)
-print("ANSWER")
-print("=" * 60)
-
-print(answer)
+    print("\nAssistant:")
+    print(answer)
+    print("-" * 60)
