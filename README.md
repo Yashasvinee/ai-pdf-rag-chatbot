@@ -10,7 +10,6 @@ An AI-powered chatbot that lets users upload PDF documents and ask questions abo
 - Store embeddings with FAISS
 - Retrieve relevant context using semantic search
 - Generate answers with Gemini
-- ChatGPT-style interface using Streamlit
 
 ## Tech Stack
 
